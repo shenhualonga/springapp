@@ -8,28 +8,27 @@
     <!-- the application context definition for the springapp DispatcherServlet -->
 
     <bean id="productManager" class="springapp.service.SimpleProductManager">
-        <property name="products">
+        <property name="productDao" ref="productDao"/>
+    </bean>
+    
+    <bean id="productDao" class="springapp.repository.JdbcProductDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    
+    <bean id="propertyConfigurer" 
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
             <list>
-                <ref bean="product1"/>
-                <ref bean="product2"/>
-                <ref bean="product3"/>
+                <value>classpath:jdbc.properties</value>
             </list>
         </property>
-    </bean>
-
-    <bean id="product1" class="springapp.domain.Product">
-        <property name="description" value="Lamp"/>
-        <property name="price" value="5.75"/>
-    </bean>
-        
-    <bean id="product2" class="springapp.domain.Product">
-        <property name="description" value="Table"/>
-        <property name="price" value="75.25"/>
-    </bean>
-
-    <bean id="product3" class="springapp.domain.Product">
-        <property name="description" value="Chair"/>
-        <property name="price" value="22.79"/>
     </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
